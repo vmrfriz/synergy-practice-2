@@ -1,4 +1,4 @@
-export default function Welcome({ user }) {
+export default function Home({ user }) {
     return (
         <>
             <h1>Welcome</h1>
