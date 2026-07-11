@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
+ * @property string $login
  * @property string $name
  * @property string $email
  * @property string $email_verified_at

@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * @property string $uild
+ * @property string $ulid
  * @property string $title
  * @property string $content
  * @property boolean $hidden
