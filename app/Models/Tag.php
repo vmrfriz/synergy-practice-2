@@ -23,8 +23,12 @@ class Tag extends Model
 {
     use HasUuids;
 
+    protected $primaryKey = 'ulid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class);
+        return $this->belongsToMany(Post::class, 'post_tag', 'tag_ulid', 'post_ulid');
     }
 }

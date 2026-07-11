@@ -9,6 +9,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +27,7 @@ use Illuminate\Support\Collection;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  *
+ * @property Collection<int,User> $subscriptions
  * @property Collection<int,Post> $posts
  * @property Collection<int,Comment> $comments
  */
@@ -43,6 +45,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function subscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(__CLASS__, 'subscriptions', 'subscriber_id', 'target_id');
     }
 
     public function posts(): HasMany

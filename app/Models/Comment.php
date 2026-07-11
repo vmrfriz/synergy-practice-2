@@ -25,6 +25,8 @@ class Comment extends Model
 {
     use HasUuids;
 
+    protected $primaryKey = 'ulid';
+
     public function author(): HasMany
     {
         return $this->hasMany(User::class, 'author_id');
