@@ -6,15 +6,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * @property string $ulid
+ * Тэг для записей блога
+ *
+ * @property string $id
  * @property string $name
+ * @property int $created_by
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property Collection<int,Post> $posts
  */
@@ -23,14 +29,16 @@ use Illuminate\Support\Collection;
 class Tag extends Model
 {
     use HasFactory;
-    use HasUuids;
 
-    protected $primaryKey = 'ulid';
-    protected $keyType = 'string';
-    public $incrementing = false;
-
+    /** @return BelongsToMany<Post, Tag> */
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'post_tag', 'tag_ulid', 'post_ulid');
+        return $this->belongsToMany(Post::class);
+    }
+
+    /** @return BelongsTo<User, Tag> */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

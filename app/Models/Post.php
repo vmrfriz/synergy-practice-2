@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +14,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * @property string $ulid
+ * Запись блога
+ *
+ * @property string $id
+ * @property string $slug
+ * @property int $author_id
  * @property string $title
  * @property string $content
  * @property boolean $hidden
@@ -26,25 +29,22 @@ use Illuminate\Support\Collection;
  * @property User $author
  * @property Collection<int,Tag> $tags
  */
-#[Fillable(['title', 'content', 'hidden'])]
+#[Fillable(['slug', 'title', 'content', 'hidden'])]
 class Post extends Model
 {
     use HasFactory;
-    use HasUuids;
     use SoftDeletes;
 
-    protected $primaryKey = 'ulid';
-    protected $keyType = 'string';
-    public $incrementing = false;
-
+    /** @return BelongsTo<User, Post> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    /** @return BelongsToMany<Tag, Post> */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'post_tag', 'post_ulid', 'tag_ulid');
+        return $this->belongsToMany(Tag::class);
     }
 
     public function getCanEditAttribute(): bool

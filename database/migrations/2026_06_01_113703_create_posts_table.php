@@ -10,7 +10,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', static function (Blueprint $table) {
-            $table->ulid()->primary();
+            $table->id();
+            $table->string('slug');
             $table->foreignIdFor(User::class, 'author_id')
                 ->nullable()
                 ->constrained()
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->boolean('hidden')->default(false);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['author_id', 'slug']);
         });
     }
 
