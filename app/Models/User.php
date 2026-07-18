@@ -55,6 +55,7 @@ class User extends Authenticatable
         ];
     }
 
+    /** @return BelongsToMany<User, User, Subscription> */
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(__CLASS__, Subscription::class, 'subscriber_id', 'target_id');
