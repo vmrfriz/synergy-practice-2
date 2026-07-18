@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -56,14 +57,22 @@ class User extends Authenticatable
 
     public function subscriptions(): BelongsToMany
     {
-        return $this->belongsToMany(__CLASS__, 'subscriptions', 'subscriber_id', 'target_id');
+        return $this->belongsToMany(__CLASS__, Subscription::class, 'subscriber_id', 'target_id');
     }
 
+    /** @return HasMany<Post, User> */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'author_id');
+        return $this->hasMany(Post::class, 'author_id')->orderByDesc('created_at');
     }
 
+    /** @return HasManyThrough<Post, Subscription, User> */
+    public function feed(): HasManyThrough
+    {
+        return $this->hasManyThrough(Post::class, Subscription::class, 'target_id', 'author_id');
+    }
+
+    /** @return HasMany<Comment, User> */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'author_id');
