@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $login
+ * @property boolean $admin
  * @property string $name
  * @property string $email
  * @property string $email_verified_at
@@ -47,6 +48,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'admin' => 'boolean',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];

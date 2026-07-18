@@ -26,6 +26,7 @@ class UserFactory extends Factory
     {
         return [
             'login' => Str::kebab(fake()->domainWord()),
+            'admin' => false,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

@@ -46,14 +46,4 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
-
-    public function getCanEditAttribute(): bool
-    {
-        return auth()->check() && auth()->id() === $this->author?->id;
-    }
-
-    public function getCanDeleteAttribute(): bool
-    {
-        return auth()->check() && auth()->id() === $this->author?->id;
-    }
 }
