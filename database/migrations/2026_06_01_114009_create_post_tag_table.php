@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +15,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignUlid('tag_ulid')
-                ->constrained('tags', 'ulid')
+            $table->foreignIdFor(Tag::class)
+                ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });

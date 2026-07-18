@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -14,8 +15,8 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'ulid' => Str::ulid(),
-            'name' => $this->faker->word,
+            'name' => $this->faker->unique()->word,
+            'created_by' => User::inRandomOrder()->first() ?? User::factory()
         ];
     }
 }
