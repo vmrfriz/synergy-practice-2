@@ -6,7 +6,6 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 #[UseModel(Post::class)]
 class PostFactory extends Factory
@@ -15,10 +14,11 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'ulid' => Str::ulid(),
+            'slug' => $this->faker->slug(),
+            'author_id' => User::query()->inRandomOrder()->first() ?? User::factory(),
             'title' => $this->faker->sentence(),
             'content' => $this->faker->paragraphs(asText: true),
-            'author_id' => User::query()->inRandomOrder()->first() ?? User::factory(),
+            'hidden' => false,
         ];
     }
 }
