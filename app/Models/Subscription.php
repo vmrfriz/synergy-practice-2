@@ -12,5 +12,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class Subscription extends Pivot
 {
-    //
+    // protected $primaryKey = null;
+    protected $table = 'subscriptions';
+    public $incrementing = false;
 }

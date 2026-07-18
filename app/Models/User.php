@@ -70,7 +70,7 @@ class User extends Authenticatable
     /** @return HasManyThrough<Post, Subscription, User> */
     public function feed(): HasManyThrough
     {
-        return $this->hasManyThrough(Post::class, Subscription::class, 'target_id', 'author_id');
+        return $this->hasManyThrough(Post::class, Subscription::class, 'subscriber_id', 'author_id', 'id', 'target_id');
     }
 
     /** @return HasMany<Comment, User> */
