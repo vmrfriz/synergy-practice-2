@@ -1,25 +1,24 @@
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { showPostUrl, subscribe as subscribeRoute, unsubscribe as unsubscribeRoute } from '../route';
 import { format } from 'date-fns';
 import { pluralize } from '../utils/helpers'
 import { ru } from 'date-fns/locale';
+import { logout as logoutRoute } from '../route'
 import Subscriptions from '../Components/Subscriptions/Subscriptions';
 import PostItemCompact from '../Components/PostItem/PostItemCompact';
+import SubscriptionButton from '../Components/Subscriptions/SubscriptionButton';
 
 export default function Profile({user = {}, subscribed = false, posts = [], subscriptions = [], feedPosts = []}) {
     const { auth } = usePage().props;
 
     const [tab, setTab] = useState('feed');
 
-    const { post, processing, errors } = useForm();
-    const subscribe = () => post(subscribeRoute(user));
-    const unsubscribe = () => post(unsubscribeRoute(user));
-
     const tabClass = (tabName) =>
         tabName === tab ? 'btn-primary' : 'btn-outline-primary';
 
-    const logout = () => {};
+    const logout = () => router.post('/logout', {}, {
+        onBefore: () => confirm('Вы уверены, что хотите выйти из аккаунта?'),
+    });
 
     return (
         <>
@@ -38,10 +37,7 @@ export default function Profile({user = {}, subscribed = false, posts = [], subs
                                 </div>
                             ) : (
                                 <div className="mb-4">
-                                    {subscribed
-                                        ? <button type="button" onClick={unsubscribe} className={`btn btn-outline-danger w-100 ${processing ? 'progress-bar progress-bar-striped progress-bar-animated' : ''}`}>Отписаться</button>
-                                        : <button type="button" onClick={subscribe} className={`btn btn-success w-100 ${processing ? 'progress-bar progress-bar-striped progress-bar-animated' : ''}`}>Подписаться</button>
-                                    }
+                                    <SubscriptionButton user={user} />
                                 </div>
                             )}
 
@@ -67,12 +63,14 @@ export default function Profile({user = {}, subscribed = false, posts = [], subs
                                     Подписки
                                 </button>
 
-                                <button
+                                <Link
+                                    as="button"
+                                    type="button"
                                     className="btn btn-outline-danger"
                                     onClick={logout}
                                 >
                                     Выйти
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -91,7 +89,7 @@ export default function Profile({user = {}, subscribed = false, posts = [], subs
 
                             <div className="d-flex flex-column gap-3">
                                 {feedPosts.data.map((post) => (
-                                    <PostItemCompact post={post} />
+                                    <PostItemCompact post={post} key={post.id} />
                                 ))}
                             </div>
                         </div>
@@ -118,7 +116,7 @@ export default function Profile({user = {}, subscribed = false, posts = [], subs
 
                             <div className="d-flex flex-column gap-3">
                                 {posts.data.map((post) => (
-                                    <PostItemCompact post={post} />
+                                    <PostItemCompact post={post} key={post.id} />
                                 ))}
                             </div>
                         </div>

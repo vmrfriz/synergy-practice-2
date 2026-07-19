@@ -22,14 +22,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'exists:users,email'],
             'password' => ['required', 'string'],
         ]);
 
         $authorized = Auth::attempt($credentials, $request->boolean('remember'));
         if ($authorized) {
-            //
+            return redirect()->route('profile');
         }
+
+        return back()->withErrors(['message' => 'Неверный пароль']);
     }
 
     public function registerForm()
@@ -42,8 +44,13 @@ class AuthController extends Controller
 
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        return redirect()->route('profile');
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 }
