@@ -14,14 +14,19 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
+        $subscriptions = $user->subscriptions()
+            ->withCount('posts')
+            ->paginate();
+        $subscriptions->getCollection()
+            ->each
+            ->append('subscribed');
+
         return Inertia::render('Profile', [
             'user' => $user,
             'posts' => $user->posts()
                 ->withOnly(['comments'])
                 ->paginate(),
-            'subscriptions' => $user->subscriptions()
-                ->withCount('posts')
-                ->paginate(),
+            'subscriptions' => $subscriptions,
             'feedPosts' => $user->feed()
                 ->paginate(),
         ]);

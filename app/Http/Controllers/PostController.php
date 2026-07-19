@@ -41,7 +41,7 @@ class PostController extends Controller
 
         return Inertia::render('Post/Index', [
             'title' => "Записи пользователя {$user->name}",
-            'author' => $user,
+            'author' => $user->append('subscribed'),
             'posts' => $user->posts()->paginate(),
         ]);
     }
@@ -66,6 +66,7 @@ class PostController extends Controller
         }
 
         $post->loadMissing('comments.author');
+        $post->author->append('subscribed');
 
         return Inertia::render('Post/Show', [
             'post' => $post,

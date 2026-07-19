@@ -44,8 +44,6 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $appends = ['subscribed'];
-
     /** @return array<string, string> */
     protected function casts(): array
     {
