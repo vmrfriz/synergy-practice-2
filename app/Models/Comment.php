@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -29,15 +28,17 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $with = ['author'];
+
     /** @return BelongsTo<Post, Comment> */
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
     }
 
-    /** @return HasMany<User, Comment> */
-    public function author(): HasMany
+    /** @return BelongsTo<User, Comment> */
+    public function author(): BelongsTo
     {
-        return $this->hasMany(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 }

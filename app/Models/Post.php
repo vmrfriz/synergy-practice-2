@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -35,6 +36,10 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $with = ['author', 'tags'];
+
+    protected $withCount = ['comments'];
+
     /** @return BelongsTo<User, Post> */
     public function author(): BelongsTo
     {
@@ -45,5 +50,11 @@ class Post extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    /** @return HasMany<Comment, Post> */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

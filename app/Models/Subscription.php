@@ -12,7 +12,19 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class Subscription extends Pivot
 {
-    // protected $primaryKey = null;
     protected $table = 'subscriptions';
     public $incrementing = false;
+
+    /**
+     * Проверка наличия подписки
+     * @param int $subscriber_id
+     * @param int $target_id
+     * @return bool
+     */
+    public static function subscribed(int $subscriber_id, int $target_id): bool
+    {
+        return self::query()
+            ->where(compact('subscriber_id', 'target_id'))
+            ->exists();
+    }
 }

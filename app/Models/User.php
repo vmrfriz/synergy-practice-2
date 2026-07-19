@@ -61,13 +61,20 @@ class User extends Authenticatable
     /** @return HasMany<Post, User> */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'author_id')->orderByDesc('created_at');
+        return $this->hasMany(Post::class, 'author_id')->latest();
     }
 
     /** @return HasManyThrough<Post, Subscription, User> */
     public function feed(): HasManyThrough
     {
-        return $this->hasManyThrough(Post::class, Subscription::class, 'subscriber_id', 'author_id', 'id', 'target_id');
+        return $this->hasManyThrough(
+            Post::class,
+            Subscription::class,
+            'subscriber_id',
+            'author_id',
+            'id',
+            'target_id'
+        )->latest();
     }
 
     /** @return HasMany<Comment, User> */
