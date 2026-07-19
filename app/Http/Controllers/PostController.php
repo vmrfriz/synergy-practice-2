@@ -130,13 +130,13 @@ class PostController extends Controller
             $post->tags()->sync($request->tags);
         });
 
-        return redirect()->route('posts.edit', [$post]);
+        return redirect()->route('author.posts.edit', [$post]);
     }
 
-    public function destroy(Post $post): RedirectResponse
+    public function destroy(User $user, Post $post): RedirectResponse
     {
         Gate::authorize('delete', $post);
 
-        return redirect()->route('posts.index');
+        return redirect()->route('profile');
     }
 }
