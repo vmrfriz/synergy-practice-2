@@ -18,19 +18,16 @@ class UserSeeder extends Seeder
         $password = Hash::make('password');
 
         User::factory()->create([
-            'login' => 'synergy',
             'email' => 'admin@synergy.ru',
             'password' => $password,
         ]);
 
         User::factory()->create([
-            'login' => 'shitposter',
-            'email' => 'shit@vk.ru',
+            'email' => 'shitpost@vk.ru',
             'password' => $password,
         ]);
 
         User::factory()->create([
-            'login' => null,
             'password' => $password,
         ]);
     }

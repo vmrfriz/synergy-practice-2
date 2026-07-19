@@ -21,7 +21,6 @@ use Illuminate\Support\Collection;
  * Пользователь
  *
  * @property int $id
- * @property string $login
  * @property boolean $admin
  * @property string $name
  * @property string $email
@@ -36,14 +35,12 @@ use Illuminate\Support\Collection;
  * @property Collection<int,Post> $posts
  * @property Collection<int,Comment> $comments
  */
-#[Fillable(['login', 'name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
-
-    public const string LOGIN_PATTERN = '/^(?!)\w[\w\d\._-]+/';
 
     /** @return array<string, string> */
     protected function casts(): array
