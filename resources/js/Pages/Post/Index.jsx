@@ -1,11 +1,16 @@
 import Pagination from "../../Components/Pagination.jsx";
 import PostItem from "../../Components/PostItem/PostItem.jsx";
+import SubscriptionButton from "../../Components/Subscriptions/SubscriptionButton.jsx";
 
-export default function Index({ posts, title }) {
+export default function Index({ title, author, posts }) {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1 className="mb-0">{title}</h1>
+            </div>
+
+            <div className="mb-4">
+                <SubscriptionButton user={author} />
             </div>
 
             {posts.data.length === 0 && (

@@ -31,6 +31,8 @@ use Illuminate\Support\Collection;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  *
+ * @property bool $subscribed
+ *
  * @property Collection<int,User> $subscriptions
  * @property Collection<int,Post> $posts
  * @property Collection<int,Comment> $comments
@@ -41,6 +43,8 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $appends = ['subscribed'];
 
     /** @return array<string, string> */
     protected function casts(): array
@@ -81,5 +85,10 @@ class User extends Authenticatable
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'author_id');
+    }
+
+    public function getSubscribedAttribute(): bool
+    {
+        return Subscription::subscribed(auth()->id(), $this->id);
     }
 }

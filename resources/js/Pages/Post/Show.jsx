@@ -6,6 +6,7 @@ import Tags from '../../Components/Tags/Tags.jsx';
 import Author from '../../Components/Author.jsx';
 import DateTime from '../../Components/DateTime.jsx';
 import Comments from '../../Components/Comments/Comments.jsx';
+import SubscriptionButton from '../../Components/Subscriptions/SubscriptionButton.jsx';
 
 export default function Show({ post, can_edit, can_delete }) {
     const { auth } = usePage().props;
@@ -28,6 +29,7 @@ export default function Show({ post, can_edit, can_delete }) {
 
                             <div className="text-muted">
                                 Автор: <Author user={post.author} />
+                                <SubscriptionButton user={post.author} className="btn-sm py-0 px-2 ms-2" />
                             </div>
 
                             <div className="text-muted small">
@@ -70,7 +72,7 @@ export default function Show({ post, can_edit, can_delete }) {
             </div>
 
             <h3 className="mb-4">Комментарии</h3>
-            <Comments comments={post.comments} />
+            <Comments comments={post.comments} className="mb-4" />
         </>
     );
 }

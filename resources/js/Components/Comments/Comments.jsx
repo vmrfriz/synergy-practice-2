@@ -3,7 +3,7 @@ import Comment from "../Comment";
 export default function Comments({ comments, className }) {
     if (!comments || comments.length === 0) {
         return (
-            <div className="text-muted">
+            <div className={`text-muted ${className || ''}`}>
                 Комментариев пока нет.
             </div>
         );

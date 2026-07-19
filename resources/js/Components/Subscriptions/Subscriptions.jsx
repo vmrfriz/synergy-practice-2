@@ -12,7 +12,7 @@ export default function Subscriptions({ users, className }) {
     return (
         <div className={`list-group ${className || ''}`}>
             {users.map((user) => (
-                <Subscription user={user} />
+                <Subscription user={user} key={user.id} />
             ))}
         </div>
     );
