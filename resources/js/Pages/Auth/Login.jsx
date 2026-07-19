@@ -78,7 +78,7 @@ export default function Login({ email, password }) {
                                         }
                                     />
 
-                                    <label for="remember-me" className="form-check-label">
+                                    <label htmlFor="remember-me" className="form-check-label">
                                         Запомнить меня
                                     </label>
                                 </div>
