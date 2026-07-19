@@ -7,7 +7,7 @@ export default function Comment({ comment }) {
   return (
     <div className="border rounded p-3">
       <div className="fw-semibold">
-        <Author user={comment.author} />
+        {comment.author && <Author user={comment.author} />}
       </div>
 
       <div className="small text-muted mb-2">

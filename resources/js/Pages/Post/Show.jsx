@@ -7,6 +7,7 @@ import Author from '../../Components/Author.jsx';
 import DateTime from '../../Components/DateTime.jsx';
 import Comments from '../../Components/Comments/Comments.jsx';
 import SubscriptionButton from '../../Components/Subscriptions/SubscriptionButton.jsx';
+import CommentForm from '../../Components/Comments/CommentForm.jsx';
 
 export default function Show({ post, can_edit, can_delete }) {
     const { auth } = usePage().props;
@@ -73,6 +74,7 @@ export default function Show({ post, can_edit, can_delete }) {
 
             <h3 className="mb-4">Комментарии</h3>
             <Comments comments={post.comments} className="mb-4" />
+            <CommentForm post={post} />
         </>
     );
 }

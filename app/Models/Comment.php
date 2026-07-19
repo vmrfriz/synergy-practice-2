@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  *
  * @property User $author
  */
-#[Fillable(['content'])]
+#[Fillable(['content', 'author_id'])]
 class Comment extends Model
 {
     use HasFactory;
