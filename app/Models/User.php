@@ -44,6 +44,10 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $attributes = [
+        'admin' => false,
+    ];
+
     /** @return array<string, string> */
     protected function casts(): array
     {

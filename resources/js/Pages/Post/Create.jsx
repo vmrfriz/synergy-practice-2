@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import Editor from '../../Components/Editor';
+import CustomInput from '../../Components/CustomInput';
 import { createPostUrl } from '../../route';
 import { useEffect } from 'react';
 
@@ -96,27 +97,5 @@ export default function Create() {
                 </div>
             </div>
         </>
-    );
-}
-
-function CustomInput({ children, value, onChange, error, placeholder }) {
-    return (
-        <div className="mb-3">
-            <label className="form-label">{children}</label>
-
-            <input
-                type="text"
-                className="form-control"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-            />
-
-            {error && (
-                <div className="text-danger small mt-1">
-                    {error}
-                </div>
-            )}
-        </div>
     );
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class AuthController extends Controller
@@ -39,9 +42,15 @@ class AuthController extends Controller
         return Inertia::render('Auth/Register');
     }
 
-    public function register()
+    public function register(RegisterRequest $request)
     {
+        $user = new User($request->only('name', 'email'));
+        $user->password = Hash::make($request->password);
+        $user->save();
 
+        Auth::loginUsingId($user->id, true);
+
+        return redirect()->intended('profile');
     }
 
     public function logout(Request $request)

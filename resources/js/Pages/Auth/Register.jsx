@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import CustomInput from '../../Components/CustomInput';
 
 export default function Register() {
     const { data, setData, post, processing, errors } = useForm({
@@ -14,6 +15,12 @@ export default function Register() {
         post('/register');
     }
 
+    const bind = (name) => ({
+        value: data[name],
+        error: errors[name],
+        onChange: (value) => setData(name, value)
+    });
+
     return (
         <>
             <div className="row justify-content-center">
@@ -23,68 +30,10 @@ export default function Register() {
                             <h1 className="mb-4">Регистрация</h1>
 
                             <form onSubmit={submit}>
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Имя
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={data.name}
-                                        onChange={(e) =>
-                                            setData('name', e.target.value)
-                                        }
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Email
-                                    </label>
-
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        value={data.email}
-                                        onChange={(e) =>
-                                            setData('email', e.target.value)
-                                        }
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Пароль
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={data.password}
-                                        onChange={(e) =>
-                                            setData('password', e.target.value)
-                                        }
-                                    />
-                                </div>
-
-                                <div className="mb-4">
-                                    <label className="form-label">
-                                        Подтверждение пароля
-                                    </label>
-
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={data.password_confirmation}
-                                        onChange={(e) =>
-                                            setData(
-                                                'password_confirmation',
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </div>
+                                <CustomInput {...bind('name')}>Имя</CustomInput>
+                                <CustomInput {...bind('email')} type="email">Email</CustomInput>
+                                <CustomInput {...bind('password')} type="password">Пароль</CustomInput>
+                                <CustomInput {...bind('password_confirmation')} type="password">Подтверждение пароля</CustomInput>
 
                                 <button
                                     className="btn btn-primary w-100"
