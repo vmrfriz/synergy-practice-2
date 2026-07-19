@@ -14,7 +14,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(static function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/create-post', [PostController::class, 'create'])->name('author.posts.create');
+    Route::post('/create-post', [PostController::class, 'store'])->name('author.posts.store');
 
     // Route::post('/author/{user}/{post:slug}/comment', [CommentController::class, 'store'])->name('author.posts.comment');
 });

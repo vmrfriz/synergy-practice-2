@@ -2,31 +2,26 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Post;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StorePost extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return auth()->check();
+        return Gate::check('create', Post::class);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
+    /** @return array<string, ValidationRule|array<mixed>|string> */
     public function rules(): array
     {
         return [
             'title' => ['required', 'string', 'min:5', 'max:255'],
-            'content' => ['required', 'string', 'min' => 100],
-            'tags' => ['sometimes', 'array'],
-            'tags.*' => ['exists:tags,id'],
+            'content' => ['required', 'string', 'min:100'],
+            'tags' => ['array'],
+            'tags.*' => ['string', 'max:50'],
         ];
     }
 }

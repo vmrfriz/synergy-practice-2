@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { createPostUrl } from '../route';
 
 export default function Layout({ children }) {
     const { auth } = usePage().props;
@@ -15,6 +16,15 @@ export default function Layout({ children }) {
                     <Link className="navbar-brand fw-bold" href="/">
                         Блог
                     </Link>
+
+                    {user && (
+                        <Link
+                            href={createPostUrl()}
+                            className="btn btn-sm btn-primary"
+                        >
+                            Создать запись
+                        </Link>
+                    )}
 
                     <button
                         className="navbar-toggler"
@@ -50,15 +60,6 @@ export default function Layout({ children }) {
 
                             {user && (
                                 <>
-                                    <li className="nav-item">
-                                        <Link
-                                            href="/posts/create"
-                                            className="nav-link"
-                                        >
-                                            Создать запись
-                                        </Link>
-                                    </li>
-
                                     <li className="nav-item">
                                         <Link
                                             href="/profile"

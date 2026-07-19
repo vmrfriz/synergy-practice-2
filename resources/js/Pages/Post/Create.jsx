@@ -1,18 +1,28 @@
 import { useForm } from '@inertiajs/react';
 import Editor from '../../Components/Editor';
+import { createPostUrl } from '../../route';
+import { useEffect } from 'react';
 
 export default function Create() {
+
     const { data, setData, post, processing, errors } = useForm({
         title: '',
+        slug: '',
         content: '',
-        tags: '',
         hidden: false,
+        tags: [],
+    });
+
+    const bind = (name) => ({
+        value: data[name],
+        errors: errors[name],
+        onChange: (value) => setData(name, value)
     });
 
     function submit(e) {
         e.preventDefault();
 
-        post('/posts');
+        post(createPostUrl());
     }
 
     return (
@@ -22,24 +32,8 @@ export default function Create() {
                     <h1 className="mb-4">Создание записи</h1>
 
                     <form onSubmit={submit}>
-                        <div className="mb-3">
-                            <label className="form-label">Заголовок</label>
-
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={data.title}
-                                onChange={(e) =>
-                                    setData('title', e.target.value)
-                                }
-                            />
-
-                            {errors.title && (
-                                <div className="text-danger small mt-1">
-                                    {errors.title}
-                                </div>
-                            )}
-                        </div>
+                        <CustomInput {...bind('title')}>Заголовок</CustomInput>
+                        <CustomInput {...bind('slug')} placeholder="my-post-slug">SEO slug</CustomInput>
 
                         <div className="mb-3">
                             <label className="form-label">Контент</label>
@@ -78,6 +72,7 @@ export default function Create() {
 
                         <div className="form-check mb-4">
                             <input
+                                id="hidden-checkbox"
                                 type="checkbox"
                                 className="form-check-input"
                                 checked={data.hidden}
@@ -86,7 +81,7 @@ export default function Create() {
                                 }
                             />
 
-                            <label className="form-check-label">
+                            <label htmlFor="hidden-checkbox" className="form-check-label">
                                 Скрытая запись
                             </label>
                         </div>
@@ -101,5 +96,27 @@ export default function Create() {
                 </div>
             </div>
         </>
+    );
+}
+
+function CustomInput({ children, value, onChange, error, placeholder }) {
+    return (
+        <div className="mb-3">
+            <label className="form-label">{children}</label>
+
+            <input
+                type="text"
+                className="form-control"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+            />
+
+            {error && (
+                <div className="text-danger small mt-1">
+                    {error}
+                </div>
+            )}
+        </div>
     );
 }

@@ -8,6 +8,11 @@ use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
+    public function before(User $user, string $ability): bool|null
+    {
+        return $user->admin ? true : null;
+    }
+
     public function viewAny(?User $user): bool
     {
         return true;
@@ -21,6 +26,11 @@ class PostPolicy
     public function create(User $user): bool
     {
         return true;
+    }
+
+    public function edit(User $user, Post $post): bool
+    {
+        return $post->author_id === $user->id;
     }
 
     public function update(User $user, Post $post): bool

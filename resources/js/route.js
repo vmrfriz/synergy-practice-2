@@ -10,6 +10,10 @@ export function showPostUrl(post) {
     return `/${post.author_id}/${post.slug}`;
 }
 
+export function createPostUrl() {
+    return `/create-post`;
+}
+
 export function editPostUrl(post) {
     return `/${post.author_id}/${post.slug}/edit`;
 }

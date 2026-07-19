@@ -5,7 +5,7 @@ export default function Edit({ post }) {
     const { data, setData, put, processing, errors } = useForm({
         title: post.title,
         content: post.content,
-        tags: post.tags.map((t) => t.name).join(', '),
+        tags: post.tags.map((tag) => tag.name),
         hidden: post.hidden,
     });
 

@@ -26,35 +26,46 @@ class PostController extends Controller
 
     public function index(): Response
     {
+        Gate::authorize('viewAny', Post::class);
+
         return Inertia::render('Post/Index', [
             'title' => "Свежие записи блога",
+            'author' => null,
             'posts' => Post::query()->paginate(),
         ]);
     }
 
     public function author(User $user): Response
     {
+        Gate::authorize('viewAny', Post::class);
+
         return Inertia::render('Post/Index', [
             'title' => "Записи пользователя {$user->name}",
+            'author' => $user,
             'posts' => $user->posts()->paginate(),
         ]);
     }
 
     public function tag(Tag $tag): Response
     {
+        Gate::authorize('viewAny', Post::class);
+
         return Inertia::render('Post/Index', [
             'title' => "Записи по тегу {$tag->name}",
+            'author' => null,
             'posts' => $tag->posts()->paginate(),
         ]);
     }
 
     public function show(User $user, Post $post): Response
     {
+        Gate::authorize('view', $post);
+
         if ($post->author->id !== $user->id) {
             abort(404, 'У пользователя нет такой записи.');
         }
 
-        $post->loadMissing('comments');
+        $post->loadMissing('comments.author');
 
         return Inertia::render('Post/Show', [
             'post' => $post,
@@ -65,33 +76,54 @@ class PostController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Post/Create');
+        Gate::authorize('create', Post::class);
+
+        return Inertia::render('Post/Create', [
+            'tags' => Tag::query()->pluck('name')->toArray()
+        ]);
     }
 
     public function store(StorePost $request): RedirectResponse
     {
-        $post = DB::transaction(static function () use ($request) {
-            $post = new Post([
-                ...$request->only('title', 'content'),
-                'author' => auth()->id(),
+        Gate::check('create', Post::class)
+
+        $user = auth()->user();
+
+        $post = DB::transaction(function () use ($request, $user) {
+            $post = Post::create([
+                'title' => $request->title,
+                'content' => $request->input('content'),
+                'hidden' => $request->boolean('hidden'),
+                'author_id' => $user->id,
             ]);
-            $post->save();
-            $post->tags()->sync($request->tags);
+
+            $tagIds = collect($request->array('tags'))
+                ->map(fn(array $tag) =>
+                    Tag::firstOrCreate(['name' => $tag['name']], ['created_by' => $user->id])->id
+                );
+
+            $post->tags()->sync($tagIds);
+
             return $post;
         });
 
-        return redirect()->route('posts.show', [$post]);
+        return redirect()->route('author.posts.show', [$user, $post]);
     }
 
     public function edit(Post $post): Response
     {
-        $this->assertAuthor($post);
+        Gate::authorize('edit', $post);
 
-        return Inertia::render('Post/Edit');
+        return Inertia::render('Post/Edit', [
+            'post' => $post,
+            'tags' => Tag::query()->pluck('name')->toArray(),
+        ]);
     }
 
     public function update(StorePost $request, Post $post): RedirectResponse
     {
+        Gate::authorize('update', $post);
+
         DB::transaction(static function () use ($post, $request) {
             $post->update($request->only(['title', 'content']));
             $post->tags()->sync($request->tags);
@@ -102,18 +134,8 @@ class PostController extends Controller
 
     public function destroy(Post $post): RedirectResponse
     {
-        $this->assertAuthor($post);
+        Gate::authorize('delete', $post);
 
         return redirect()->route('posts.index');
-    }
-
-    private function assertAuthor(Post $post): void
-    {
-        $ok = auth()->check()
-            && auth()->user()->id === $post->author?->id;
-
-        if (!$ok) {
-            abort(403, 'Вы не автор этой записи');
-        }
     }
 }
