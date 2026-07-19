@@ -1,7 +1,7 @@
 import '../css/app.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import React from 'react';
 import Layout from './Layouts/Layout.jsx';

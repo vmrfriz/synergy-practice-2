@@ -55,7 +55,7 @@ export default function Layout({ children }) {
                                             href="/posts/create"
                                             className="nav-link"
                                         >
-                                            Создать пост
+                                            Создать запись
                                         </Link>
                                     </li>
 
