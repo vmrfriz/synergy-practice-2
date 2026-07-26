@@ -91,6 +91,10 @@ class User extends Authenticatable
 
     public function getSubscribedAttribute(): bool
     {
+        if (auth()->check() === false) {
+            return false;
+        }
+
         return Subscription::subscribed(auth()->id(), $this->id);
     }
 }

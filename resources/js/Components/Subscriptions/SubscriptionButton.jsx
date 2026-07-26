@@ -1,8 +1,13 @@
-import { Link, useForm } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import { subscribe, unsubscribe } from "../../route";
 
 export default function SubscriptionButton({ user, className }) {
     const { post, processing, errors } = useForm();
+    const { auth } = usePage().props;
+
+    if (! auth.user) {
+        return null;
+    }
 
     const toggleSubscription = () => {
         const route = user.subscribed
