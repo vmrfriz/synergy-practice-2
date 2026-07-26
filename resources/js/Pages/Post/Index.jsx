@@ -26,7 +26,7 @@ export default function Index({ title, author, posts }) {
             </div>
 
             <div className="mt-4 d-flex justify-content-center">
-                <Pagination links={posts.links}/>
+                <Pagination links={posts.meta.links}/>
             </div>
         </>
     );

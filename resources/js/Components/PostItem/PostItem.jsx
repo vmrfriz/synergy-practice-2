@@ -23,7 +23,7 @@ export default function PostItem({ post }) {
                 <Tags tags={post.tags} className="mb-3" />
 
                 <div>
-                    {post.content.slice(0, 250)}...
+                    {post.content}...
                     <Link
                         href={showPostUrl(post)}
                         className="text-decoration-none"

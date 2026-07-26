@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
+use App\Http\Resources\PostListResource;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\Middleware;
@@ -31,7 +31,9 @@ class PostController extends Controller
         return Inertia::render('Post/Index', [
             'title' => "Свежие записи блога",
             'author' => null,
-            'posts' => Post::query()->paginate(),
+            'posts' => PostListResource::collection(
+                Post::query()->paginate()
+            ),
         ]);
     }
 
@@ -42,7 +44,9 @@ class PostController extends Controller
         return Inertia::render('Post/Index', [
             'title' => "Записи пользователя {$user->name}",
             'author' => $user->append('subscribed'),
-            'posts' => $user->posts()->paginate(),
+            'posts' => PostListResource::collection(
+                $user->posts()->paginate()
+            ),
         ]);
     }
 
@@ -53,7 +57,9 @@ class PostController extends Controller
         return Inertia::render('Post/Index', [
             'title' => "Записи по тегу {$tag->name}",
             'author' => null,
-            'posts' => $tag->posts()->paginate(),
+            'posts' => PostListResource::collection(
+                $tag->posts()->paginate()
+            ),
         ]);
     }
 

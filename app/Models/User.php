@@ -67,7 +67,7 @@ class User extends Authenticatable
     /** @return HasMany<Post, User> */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'author_id')->latest();
+        return $this->hasMany(Post::class, 'author_id');
     }
 
     /** @return HasManyThrough<Post, Subscription, User> */
