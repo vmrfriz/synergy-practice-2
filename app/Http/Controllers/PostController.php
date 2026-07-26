@@ -20,7 +20,7 @@ class PostController extends Controller
     public static function middleware(): array
     {
         return [
-            new Middleware('auth', except: ['index', 'show'])
+            new Middleware('auth', except: ['index', 'author', 'tag', 'show'])
         ];
     }
 
@@ -95,16 +95,15 @@ class PostController extends Controller
         $user = auth()->user();
 
         $post = DB::transaction(function () use ($request, $user) {
-            $post = Post::create([
-                'title' => $request->title,
-                'content' => $request->input('content'),
-                'hidden' => $request->boolean('hidden'),
-                'author_id' => $user->id,
-            ]);
+            $post = new Post(
+                $request->only(['title', 'slug', 'content', 'hidden'])
+            );
+            $post->author_id = $user->id;
+            $post->save();
 
             $tagIds = collect($request->array('tags'))
-                ->map(fn(array $tag) =>
-                    Tag::firstOrCreate(['name' => $tag['name']], ['created_by' => $user->id])->id
+                ->map(fn(string $tag) =>
+                    Tag::firstOrCreate(['name' => $tag], ['created_by' => $user->id])->id
                 );
 
             $post->tags()->sync($tagIds);
@@ -115,7 +114,7 @@ class PostController extends Controller
         return redirect()->route('author.posts.show', [$user, $post]);
     }
 
-    public function edit(Post $post): Response
+    public function edit(User $user, Post $post): Response
     {
         Gate::authorize('edit', $post);
 
@@ -125,16 +124,26 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(StorePost $request, Post $post): RedirectResponse
+    public function update(StorePost $request, User $user, Post $post): RedirectResponse
     {
         Gate::authorize('update', $post);
 
-        DB::transaction(static function () use ($post, $request) {
-            $post->update($request->only(['title', 'content']));
-            $post->tags()->sync($request->tags);
+        DB::transaction(static function () use ($user, $post, $request) {
+            $post->update(
+                $request->only(['title', 'slug', 'content', 'hidden'])
+            );
+
+            $tagIds = collect($request->array('tags'))
+                ->map(fn(string $tag) =>
+                    Tag::firstOrCreate(['name' => $tag], ['created_by' => $user->id])->id
+                );
+
+            $post->tags()->sync($tagIds);
         });
 
-        return redirect()->route('author.posts.edit', [$post]);
+        return redirect()
+            ->route('author.posts.edit', [$user, $post])
+            ->with('success', 'Изменения сохранены');
     }
 
     public function destroy(User $user, Post $post): RedirectResponse

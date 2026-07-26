@@ -28,7 +28,6 @@ Route::middleware('auth')->group(static function () {
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/tag/{tag:name}', [PostController::class, 'tag'])->name('tag');
 Route::get('/author/{user}', [PostController::class, 'author'])->name('author.posts.index');
-Route::get('/author/{user}/{post:slug}/edit', [PostController::class, 'author'])->name('author.posts.edit');
 Route::post('/author/{user}/subscribe', [ProfileController::class, 'subscribe'])->name('profile.subscribe');
 Route::post('/author/{user}/unsubscribe', [ProfileController::class, 'unsubscribe'])->name('profile.unsubscribe');
 Route::get('/author/{user}/{post:slug}', [PostController::class, 'show'])->name('author.posts.show');

@@ -1,11 +1,11 @@
 import { useForm } from '@inertiajs/react';
 import Editor from '../../Components/Editor';
 import CustomInput from '../../Components/CustomInput';
+import TagInput from '../../Components/Tags/TagInput';
 import { createPostUrl } from '../../route';
 import { useEffect } from 'react';
 
-export default function Create() {
-
+export default function Create({ tags }) {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         slug: '',
@@ -16,7 +16,7 @@ export default function Create() {
 
     const bind = (name) => ({
         value: data[name],
-        errors: errors[name],
+        error: errors[name],
         onChange: (value) => setData(name, value)
     });
 
@@ -52,23 +52,19 @@ export default function Create() {
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label">
-                                Теги
-                            </label>
+                            <label className="form-label">Теги</label>
 
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="laravel, react, inertia"
+                            <TagInput
+                                tags={tags}
                                 value={data.tags}
-                                onChange={(e) =>
-                                    setData('tags', e.target.value)
-                                }
+                                onChange={(tags) => setData('tags', tags)}
                             />
 
-                            <div className="form-text">
-                                Теги через запятую
-                            </div>
+                            {errors.tags && (
+                                <div className="text-danger small mt-1">
+                                    {errors.tags}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-check mb-4">

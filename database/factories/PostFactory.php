@@ -18,7 +18,10 @@ class PostFactory extends Factory
             'slug' => fn (array $attributes) => Str::slug($attributes['title']),
             'author_id' => User::query()->inRandomOrder()->first() ?? User::factory(),
             'title' => $this->faker->unique()->sentence(),
-            'content' => $this->faker->paragraphs(asText: true),
+            'content' => array_map(
+                fn($p) => "<p>{$p}</p>",
+                $this->faker->paragraphs(asText: true)
+            ),
             'hidden' => false,
             'created_at' => $this->faker->dateTimeBetween(now()->subYears(5), now()->subHour()),
             'updated_at' => fn (array $attributes) => $attributes['created_at'],

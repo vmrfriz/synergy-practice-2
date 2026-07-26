@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class StorePost extends FormRequest
 {
@@ -19,7 +20,14 @@ class StorePost extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'min:5', 'max:255'],
-            'slug' => ['required', 'string', 'min:5', 'max:255', 'regex:/^[\d\w][\d\w_-]+$/', 'unique:posts,slug'],
+            'slug' => [
+                'required',
+                'string',
+                'min:5',
+                'max:255',
+                'regex:/^[\d\w][\d\w_-]+$/',
+                Rule::unique('posts', 'slug')->ignore($this->post->id ?? 0),
+            ],
             'content' => ['required', 'string', 'min:100'],
             'tags' => ['array'],
             'tags.*' => ['string', 'max:50'],

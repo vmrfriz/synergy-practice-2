@@ -3,7 +3,7 @@ export function tagPostsUrl(tag) {
 }
 
 export function userPostsUrl(user) {
-    return `/author/${user.id}`;
+    return user ? `/author/${user.id}` : '#';
 }
 
 export function showPostUrl(post) {
@@ -16,6 +16,10 @@ export function createPostUrl() {
 
 export function editPostUrl(post) {
     return `/author/${post.author_id}/${post.slug}/edit`;
+}
+
+export function updatePostUrl(post) {
+    return `/author/${post.author_id}/${post.slug}`;
 }
 
 export function deletePostUrl(post) {

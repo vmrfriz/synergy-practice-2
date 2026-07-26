@@ -66,9 +66,10 @@ export default function Show({ post, can_edit, can_delete }) {
 
                     <Tags tags={post.tags} className="mb-4" />
 
-                    <div style={{ whiteSpace: 'pre-wrap' }}>
-                        {post.content}
-                    </div>
+                    <div
+                        style={{ whiteSpace: 'pre-wrap' }}
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                    />
                 </div>
             </div>
 
