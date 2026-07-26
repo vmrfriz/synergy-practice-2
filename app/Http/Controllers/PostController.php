@@ -86,8 +86,6 @@ class PostController extends Controller
 
     public function store(StorePost $request): RedirectResponse
     {
-        Gate::check('create', Post::class);
-
         $user = auth()->user();
 
         $post = DB::transaction(function () use ($request, $user) {

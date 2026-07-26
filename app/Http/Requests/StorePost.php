@@ -11,7 +11,7 @@ class StorePost extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check();
+        return Gate::check('create', Post::class);
     }
 
     /** @return array<string, ValidationRule|array<mixed>|string> */
@@ -19,9 +19,22 @@ class StorePost extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'min:5', 'max:255'],
+            'slug' => ['required', 'string', 'min:5', 'max:255', 'regex:/^[\d\w][\d\w_-]+$/', 'unique:posts,slug'],
             'content' => ['required', 'string', 'min:100'],
             'tags' => ['array'],
             'tags.*' => ['string', 'max:50'],
+            'hidden' => ['boolean'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title' => 'Заголовок',
+            'slug' => 'SEO slug',
+            'content' => 'Контент',
+            'tags' => 'Теги',
+            'tags.*' => 'Тег',
         ];
     }
 }
