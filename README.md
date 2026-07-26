@@ -2,7 +2,46 @@
 
 Кейс-задача №3
 
-## Задача
+## Запуск
+
+1. Установить Docker: https://docs.docker.com/get-started/get-docker/
+
+**Вместо всех следующих шагов, на Linux можно выполнить:**
+```bash
+make install
+```
+
+2. Склонировать этот репозиторий:
+```bash
+git clone git@github.com:vmrfriz/synergy-practice-2.git
+```
+3. Установить зависимости для PHP
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/app \
+    -w /app \
+    composer:latest install --ignore-platform-reqs
+```
+4. Создать `.env`
+```bash
+cp .env.example .env
+```
+5. Запустить контейнер с веб-приложением
+```bash
+sail up -d
+```
+6. Собрать frontend
+```bash
+sail npm run build
+```
+7. Запустить миграции и сидеры
+```
+sail artisan migrate --seed
+```
+8. Перейти по адресу [http://localhost/](http://localhost/)
+
+## Выполненная задача
 
 Создайте приложения для блога:
 - Необходимо создать web-страницу.
