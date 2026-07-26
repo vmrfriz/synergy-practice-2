@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Traits\Hideable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Запись блога
@@ -35,17 +38,33 @@ use Illuminate\Support\Collection;
 class Post extends Model
 {
     use HasFactory;
+    use Hideable;
     use SoftDeletes;
 
     protected $with = ['author', 'tags'];
 
     protected $withCount = ['comments'];
 
+    protected $casts = [
+        'hidden' => 'boolean',
+    ];
+
     protected static function booted(): void
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
         });
+    }
+
+    public function resolveRouteBindingQuery($query, $value, $field = null)
+    {
+        $currentRoute = Route::current();
+
+        if ($currentRoute && isset($currentRoute->defaults['include_hidden']) && $currentRoute->defaults['include_hidden'] === true) {
+            $query = $query->withHidden();
+        }
+
+        return parent::resolveRouteBindingQuery($query, $value, $field);
     }
 
     /** @return BelongsTo<User, Post> */

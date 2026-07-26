@@ -25,6 +25,7 @@ class ProfileController extends Controller
             'user' => $user,
             'posts' => $user->posts()
                 ->withOnly(['comments'])
+                ->withHidden()
                 ->paginate(),
             'subscriptions' => $subscriptions,
             'feedPosts' => $user->feed()

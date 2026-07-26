@@ -7,6 +7,7 @@ use App\Http\Resources\PostListResource;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\Middleware;
@@ -41,11 +42,15 @@ class PostController extends Controller
     {
         Gate::authorize('viewAny', Post::class);
 
+        $isCurrentUser = $user->id === auth()->id();
+
         return Inertia::render('Post/Index', [
             'title' => "Записи пользователя {$user->name}",
             'author' => $user->append('subscribed'),
             'posts' => PostListResource::collection(
-                $user->posts()->paginate()
+                $user->posts()
+                    ->when($isCurrentUser, fn(Builder $q) => $q->withHidden())
+                    ->paginate()
             ),
         ]);
     }
@@ -66,10 +71,6 @@ class PostController extends Controller
     public function show(User $user, Post $post): Response
     {
         Gate::authorize('view', $post);
-
-        if ($post->author->id !== $user->id) {
-            abort(404, 'У пользователя нет такой записи.');
-        }
 
         $post->loadMissing('comments.author');
         $post->author->append('subscribed');
