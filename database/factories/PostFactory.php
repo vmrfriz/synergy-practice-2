@@ -20,8 +20,8 @@ class PostFactory extends Factory
             'title' => $this->faker->unique()->sentence(),
             'content' => array_map(
                 fn($p) => "<p>{$p}</p>",
-                $this->faker->paragraphs(asText: true)
-            ),
+                $this->faker->paragraphs()
+            )|> implode(...),
             'hidden' => false,
             'created_at' => $this->faker->dateTimeBetween(now()->subYears(5), now()->subHour()),
             'updated_at' => fn (array $attributes) => $attributes['created_at'],

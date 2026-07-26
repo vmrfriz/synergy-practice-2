@@ -25,7 +25,6 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'login' => rand(0, 2) > 0 ? Str::kebab(fake()->unique()->domainWord()) : null,
             'admin' => false,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
