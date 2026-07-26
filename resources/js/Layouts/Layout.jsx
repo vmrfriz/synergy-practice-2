@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { createPostUrl } from '../route';
+import Alerts from '../Components/Alerts';
 
 export default function Layout({ children }) {
     const { auth } = usePage().props;
@@ -79,6 +80,8 @@ export default function Layout({ children }) {
                 className="container-fluid py-4"
                 style={{ maxWidth: '1024px' }}
             >
+                <Alerts />
+
                 {children}
             </main>
         </>
