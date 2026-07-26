@@ -150,6 +150,8 @@ class PostController extends Controller
     {
         Gate::authorize('delete', $post);
 
-        return redirect()->route('profile');
+        return $post->delete()
+            ? redirect()->route('profile')->with('success', 'Запись удалена')
+            : redirect()->route('profile')->withErrors('Не удалось удалить запись');
     }
 }
